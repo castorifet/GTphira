@@ -17,9 +17,9 @@ use std::{cell::RefCell, collections::HashMap, num::FpCategory};
 use tracing::debug;
 
 pub const FLICK_SPEED_THRESHOLD: f32 = 0.8;
-pub const LIMIT_PERFECT: f32 = 0.08;
-pub const LIMIT_GOOD: f32 = 0.16;
-pub const LIMIT_BAD: f32 = 0.22;
+pub const LIMIT_PERFECT: f32 = 0.02;
+pub const LIMIT_GOOD: f32 = 0.04;
+pub const LIMIT_BAD: f32 = 0.06;
 pub const UP_TOLERANCE: f32 = 0.05;
 pub const DIST_FACTOR: f32 = 0.2;
 
@@ -969,11 +969,11 @@ pub struct PlayResult {
 
 pub fn icon_index(score: u32, full_combo: bool) -> usize {
     match (score, full_combo) {
-        (x, _) if x < 700000 => 0,
-        (x, _) if x < 820000 => 1,
-        (x, _) if x < 880000 => 2,
-        (x, _) if x < 920000 => 3,
-        (x, _) if x < 960000 => 4,
+        (x, _) if x < 920000 => 0,
+        (x, _) if x < 930000 => 1,
+        (x, _) if x < 950000 => 2,
+        (x, _) if x < 975000 => 3,
+        (x, _) if x < 995000 => 4,
         (1000000, _) => 7,
         (_, false) => 5,
         (_, true) => 6,
