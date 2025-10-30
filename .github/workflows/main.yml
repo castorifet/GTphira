@@ -1,0 +1,45 @@
+name: Cargo Build
+
+on:
+  push: {}
+  pull_request: {}
+
+jobs:
+  cargo-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            librust-alsa-sys-dev libglib2.0-dev libasound2t64 \
+            libatk-adaptor libgail-common libgtk-3-dev
+
+      - name: Setup Rust
+        run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          rustup toolchain install nightly-2025-07-01
+          rustup default nightly-2025-07-01
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: "true"
+          cache-all-crates: "true"
+
+      - name: Build release binaries
+        run: |
+          cargo build --workspace --release
+
+      # Optional: upload the compiled binaries as artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: phira-binaries
+          path: target/release/
